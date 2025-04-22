@@ -41,8 +41,8 @@ A high-performance analytics API built with **Node.js, Express, GraphQL, and Mon
 
 ```bash
 # Clone repository
-git clone https://github.com/your-username/sales-analytics-api.git
-cd sales-analytics-api
+git clone https://github.com/anas-mullappally/mongo-graphql-analytics-api.git
+cd mongo-graphql-analytics-api
 
 # Install dependencies
 npm install
