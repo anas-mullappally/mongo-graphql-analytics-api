@@ -1,0 +1,10 @@
+type CategoryBreakdown {
+  category: String!
+  revenue: Float!
+}
+
+type SalesAnalytics {
+  totalRevenue: Float!
+  completedOrders: Int!
+  categoryBreakdown: [CategoryBreakdown!]!
+}

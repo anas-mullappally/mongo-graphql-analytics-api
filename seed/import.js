@@ -37,8 +37,9 @@ const importData = async () => {
     await Product.deleteMany();
     await Order.deleteMany();
 
+    // Import customers with _id from CSV
     const customers = rawCustomers.map((customer) => ({
-      id: customer._id,
+      _id: customer._id,
       name: customer.name,
       email: customer.email,
       age: customer.age,
@@ -46,8 +47,9 @@ const importData = async () => {
       gender: customer.gender,
     }));
 
+    // Import products with _id from CSV
     const products = rawProducts.map((product) => ({
-      id: product._id,
+      _id: product._id,
       name: product.name,
       category: product.category,
       price: product.price,
@@ -87,11 +89,9 @@ const importData = async () => {
           continue;
         }
 
-        const customerDetails = await Customer.findOne({
-          id: order.customerId,
-        }).select("_id");
-
-        if (!customerDetails) {
+        // Verify customer exists
+        const customerExists = await Customer.exists({ _id: order.customerId });
+        if (!customerExists) {
           console.error(`Customer not found for order ${order._id}`);
           continue;
         }
@@ -111,11 +111,9 @@ const importData = async () => {
               continue;
             }
 
-            const productDetails = await Product.findOne({
-              id: product.productId,
-            }).select("_id");
-
-            if (!productDetails) {
+            // Verify product exists
+            const productExists = await Product.exists({ _id: product.productId });
+            if (!productExists) {
               console.error(
                 `Product not found: ${product.productId} in order ${order._id}`
               );
@@ -123,7 +121,7 @@ const importData = async () => {
             }
 
             products.push({
-              productId: productDetails._id,
+              productId: product.productId,
               quantity: product.quantity,
               priceAtPurchase: product.priceAtPurchase,
             });
@@ -136,7 +134,8 @@ const importData = async () => {
         }
 
         orders.push({
-          customerId: customerDetails._id,
+          _id: order._id,
+          customerId: order.customerId,
           products,
           totalAmount: order.totalAmount,
           orderDate: order.orderDate,

@@ -1,16 +1,33 @@
 import mongoose from "mongoose";
-import { type } from "os";
 
-const customerSchema = new mongoose.Schema(
-  {
-    id: { type: String, required: true },
-    name: { type: String, required: true },
-    email: { type: String, unique: true, required: true },
-    age: { type: Number, required: true },
-    location: { type: String, required: true },
-    gender: { type: String, required: true },
+const customerSchema = new mongoose.Schema({
+  _id: {
+    type: String,
+    required: true
   },
-  { timestamps: true }
-);
+  name: {
+    type: String,
+    required: true
+  },
+  email: {
+    type: String,
+    required: true
+  },
+  age: {
+    type: Number,
+    required: true
+  },
+  location: {
+    type: String,
+    required: true
+  },
+  gender: {
+    type: String,
+    required: true,
+    enum: ["Male", "Female", "Other"]
+  }
+});
 
-export default mongoose.model("Customer", customerSchema);
+const Customer = mongoose.model("Customer", customerSchema);
+
+export default Customer;

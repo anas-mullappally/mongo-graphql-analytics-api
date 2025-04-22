@@ -1,0 +1,16 @@
+type ProductItem {
+  productId: ID!
+  quantity: Int!
+  priceAtPurchase: Float!
+}
+
+type Order {
+  _id: ID!
+  customerId: ID!
+  products: [ProductItem!]!
+  totalAmount: Float!
+  orderDate: String!
+  status: String!
+}
+
+

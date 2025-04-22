@@ -1,35 +1,58 @@
 import mongoose from "mongoose";
 
-const productItemSchema = new mongoose.Schema(
-  {
-    productId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Product",
-      required: true,
-    },
-    quantity: { type: Number, required: true },
-    priceAtPurchase: { type: Number, required: true },
+const orderItemSchema = new mongoose.Schema({
+  productId: {
+    type: String,
+    ref: "Product",
+    required: true,
   },
-  { _id: false }
-);
+  quantity: {
+    type: Number,
+    required: true,
+    min: 1,
+  },
+  priceAtPurchase: {
+    type: Number,
+    required: true,
+    min: 0,
+  },
+});
 
-const orderSchema = new mongoose.Schema(
-  {
-    customerId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Customer",
-      required: true,
-    },
-    products: [productItemSchema],
-    totalAmount: { type: Number, required: true },
-    orderDate: Date,
-    status: {
-      type: String,
-      enum: ["completed", "pending", "canceled"],
-      default: "pending",
+const orderSchema = new mongoose.Schema({
+  _id: {
+    type: String,
+    required: true,
+  },
+  customerId: {
+    type: String,
+    ref: "Customer",
+    required: true,
+  },
+  products: {
+    type: [orderItemSchema],
+    required: true,
+    validate: {
+      validator: (products) => products.length > 0,
+      message: "At least one product is required",
     },
   },
-  { timestamps: true }
-);
+  totalAmount: {
+    type: Number,
+    required: true,
+    min: 0,
+  },
+  orderDate: {
+    type: Date,
+    required: true,
+  },
+  status: {
+    type: String,
+    required: true,
+    enum: ["pending", "completed", "canceled"],
+    default: "pending",
+  },
+});
 
-export default mongoose.model("Order", orderSchema);
+const Order = mongoose.model("Order", orderSchema);
+
+export default Order;
